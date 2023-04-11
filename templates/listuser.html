@@ -1,0 +1,39 @@
+{% include 'navbar.html' %}
+
+
+
+<div class="row align-items-center" style="height: 80vh;">
+      
+      
+    <div class="mx-auto col-6 col-md-6 col-lg-6">
+      <form class="form-signin card mb-6" enctype=multipart/form-data method="post">
+        <div class="p-3 text-center" style="border-bottom: 2px solid black;">
+            <h4>Listagem de Usuários</h4>
+          </div>
+        <table class="table">
+            <thead>
+                <tr class="bg-light">
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            {% for i in dictionary %}
+            <tbody>
+              <tr>
+                <th scope="row">{{i.id_users}}</th>
+                <td>{{i.name}}</td>
+                <td>{{i.email}}</td>
+                <td><a href="/edituser/{{i.id_users}}" class="btn btn-primary-outline">Editar</a></td>
+                <td><a href="/deleteuser/{{i.id_users}}" class="btn btn-primary-outline">Deletar</a></td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+          
+
+      </form>
+    </div>
+</div>
+

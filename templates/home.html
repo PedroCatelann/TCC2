@@ -1,0 +1,13 @@
+{% if session['name'] != '' %}
+<div>
+    <p>
+        Este texto aparecerá se estiver logado
+    </p>
+</div>
+{% else %}
+<div>
+    <p>
+        Este texto aparecerá se não estiver logado
+    </p>
+</div>
+{% endif %}
