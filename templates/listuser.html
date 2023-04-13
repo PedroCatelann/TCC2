@@ -16,6 +16,8 @@
                     <th scope="col">#</th>
                     <th scope="col">Nome</th>
                     <th scope="col">Email</th>
+                    <th scope="col">Tipo</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -25,8 +27,9 @@
                 <th scope="row">{{i.id_users}}</th>
                 <td>{{i.name}}</td>
                 <td>{{i.email}}</td>
-                <td><a href="/edituser/{{i.id_users}}" class="btn btn-primary-outline">Editar</a></td>
-                <td><a href="/deleteuser/{{i.id_users}}" class="btn btn-primary-outline">Deletar</a></td>
+                <td>{{i.user_type}}</td>
+                <td><a href="/edituser/{{i.id_users}}" class="btn btn-warning">Editar</a></td>
+                <td><a href="/deleteuser/{{i.id_users}}" class="btn btn-danger">Deletar</a></td>
               </tr>
             </tbody>
             {% endfor %}

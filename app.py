@@ -104,10 +104,18 @@ def edituser(id):
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
-        
+        if request.form.get('isAdmin') != None:
+            user_type = 'ADMIN'
+        else:
+            user_type = 'COMUM'
         user = db.session.query(User).filter(User.id_users==id).first()
         user.name = name
+        user.email = email
+        user.password = password
+        user.user_type = user_type
         db.session.commit()
+        return redirect(url_for('listuser'))
+
     query = f"SELECT * FROM users WHERE id_users = {id}"
     with db.engine.connect() as conn:
         result = conn.execute(text(query))
@@ -121,9 +129,14 @@ def register():
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
+        print(request.form)
+        if request.form.get('isAdmin') != None:
+            user_type = 'ADMIN'
+        else:
+            user_type = 'COMUM'
         if name and email and password:        
             print(name)
-            user = User(name, email, password)
+            user = User(name, email, password,user_type)
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('register'))
@@ -143,10 +156,9 @@ def login():
             with db.engine.connect() as conn:
                 result = conn.execute(text(query))
                 results_as_dict = result.mappings().all()
-                print(results_as_dict)
+                print(results_as_dict[0].user_type)
                 if results_as_dict:               
-                    session['name'] = 'aaaa'
-                    print(session['name'])
+                    session['name'] = results_as_dict[0].user_type
                     return redirect(url_for('index'))
     return render_template('login.html')
 

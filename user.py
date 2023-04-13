@@ -10,12 +10,14 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(45), nullable = False)
     email = db.Column(db.String(45), nullable = False)
     password = db.Column(db.String(150), nullable = False)
+    user_type = db.Column(db.String(45), nullable = False)
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password,user_type):
         self.name = name
         self.email = email
         # self.password = generate_password_hash(password)
         self.password = password
+        self.user_type = user_type
 
     
 

@@ -23,39 +23,64 @@
 </head>
 
 <body class="text-center">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center text-white font-weight-bold">
-    Desenvolvimento de uma aplicação para contagem automática de bovinos utilizando visão computacional
-  </nav>
-  <form class="form-signin card_res mb-6" method=post enctype=multipart/form-data>
-    <h1 class="h3 mb-3 font-weight-normal">Prediction:</h1>
-    <p>{{num_yolo}}</p>
-    <img src="../static/image0.jpg" class="img-thumbnail">
-    <p>{{num_retina}}</p>
-    <img src="../static/r.jpg" class="img-thumbnail">
-    
+  {% include 'navbar.html' %}
+  
+  <div class="row align-items-center" style="height: 90vh;">
+    <div class="mx-auto col-4 col-md-4 col-lg-4">
+      <div class="card mb-6" enctype=multipart/form-data method="post">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">YOLO </h5>
+            <hr>
+            <div class="d-flex align-items-start justify-content-between">
+              <div>
+                <p class="">Número de detecções: {{num_yolo}} </p>
 
-    <button class="btn mb-4"> Test Another Image </button>
+              </div>
+              <button type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+            </div>
+            
+            
+            
+          </div>
+          <img src="../static/image0.jpg" class="card-img-bottom">
 
-    <p class="mt-5 mb-3 text-muted">Built using Pytorh and Flask, redesigned by Michael</p>
-  </form>
+
+        </div>
+          
+      
+      </div>
+    </div>
+
+    <div class="mx-auto col-4 col-md-4 col-lg-4">
+      <div class="card mb-6" enctype=multipart/form-data method="post">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">RetinaNet </h5>
+            <hr>
+            <div class="d-flex align-items-start justify-content-between">
+              <div>
+                <p class="">Número de detecções: {{num_retina}} </p>
+
+              </div>
+              <button type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+            </div>
+            
+            
+            
+          </div>
+          <img src="../static/r.jpg" class="card-img-bottom">
 
 
-  <script src="//code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-    crossorigin="anonymous"></script>
-  <script src="//stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-    crossorigin="anonymous"></script>
-  <script src="/static/script.js"></script>
-
-  <div class="alert alert-warning" role="alert">
-    The image is saved in static/image0.jpg. Note that after an new inference, the result from the last run will be
-    erased.
+        </div>
+          
+      
+      </div>
+    </div>
   </div>
-  <div class="alert alert-success" role="alert"> Running with model: {{ model_name }} </div>
+
+
+
 </body>
 
 <!-- Github Ribbon Start-->
