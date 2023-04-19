@@ -1,0 +1,82 @@
+
+        {% include 'navbar.html' %}
+
+
+<div class="row align-items-center" style="height: 80vh;">
+      
+      
+    <div class="mx-auto col-6 col-md-6 col-lg-6">
+      <form class="form-signin card mb-6" enctype=multipart/form-data method="post">
+        <div class="p-3 text-center" style="border-bottom: 2px solid black;">
+            <h4>Visualizações Salvas</h4>
+          </div>
+          <div class="panel-body table-responsive" style="max-height: 500px;">
+            <table class="table table-bordered">
+              <thead>
+                <tr class="bg-light">
+                    <th scope="col">#</th>
+                    <th scope="col">Imagem</th>
+                </tr>
+            </thead>
+            {% for i in dictionary %}
+            <tbody>
+                <tr>
+                  <th scope="row">{{i.id}}</th>
+                  <td>
+                    <a class="thumbnail" href="#">
+                        <img src="../static/{{i.link}}" width="250px" height="250px" class="img-fluid img-thumbnail">
+                    </a>
+                </td>
+
+                </tr>
+              </tbody>
+            {% endfor %}
+            </table>
+        </div>
+        <!-- <table class="table" style="max-height: 100px;">
+            <thead>
+                <tr class="bg-light">
+                    <th scope="col">#</th>
+                    <th scope="col">Imagem</th>
+                </tr>
+            </thead>
+            {% for i in dictionary %}
+            <tbody>
+                <tr>
+                  <th scope="row">{{i.id}}</th>
+                  <td>
+                    <a class="thumbnail" href="#">
+                        <img src="../static/{{i.link}}" width="250px" height="250px" class="img-fluid img-thumbnail">
+                    </a>
+                </td>
+
+                </tr>
+              </tbody>
+            {% endfor %}
+            
+          </table> -->
+          
+
+          <div class="modal fade row align-items-center" role="dialog" id="imgmodal">
+            <div class="modal-dialog mx-auto col-6 col-md-6 col-lg-6"></div>
+
+            <div class="modal-dialog mx-auto col-6 col-md-6 col-lg-6">
+                <div class="modal-content">
+                  <img class="img-responsive" src="" id="show-img">         
+                </div>          
+                </div>
+            </div>
+      </form>
+    </div>
+    </div>
+    
+</div>
+<script>
+    $(document).ready(function(){
+        $("img").click(function(){
+           var img=$(this).attr('src');
+             $("#show-img").attr('src',img);
+             $("#imgmodal").modal('show');
+        });
+    });
+</script>

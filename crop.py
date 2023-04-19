@@ -25,6 +25,7 @@ def func(crd, name):
     dst = wbg+res
   
     cv2.imwrite("A.jpg", dst)
+    cv2.imwrite("./static/original_image.jpg", dst)
     return "A.jpg"
     # cv2.imshow("Samed Size White Image", dst)
     # cv2.waitKey(0)

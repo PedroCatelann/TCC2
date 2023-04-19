@@ -7,6 +7,7 @@
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"></script>
       <script src="/static/script.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   
     <style>
       body {
@@ -44,12 +45,17 @@
             <a class="btn btn-primary-outline text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               Processamento <i class="bi bi-card-image"></i>
             </a>
-          
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul class="dropdown-menu" >
               <li><a class="dropdown-item" href="/processing">Processar Imagens </a></li>
+              <li><a class="dropdown-item" href="/seevisualization">Visualizações Salvas </a></li>
+
             </ul>
+
+            
         </div>
-        {% if session['name'] == 'ADMIN' %}
+
+
+        {% if session['user_type'] == 'ADMIN' %}
         <div class="dropdown">
             <a class="btn btn-primary-outline text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink2" data-bs-toggle="dropdown" aria-expanded="false">
               Usuários <i class="bi bi-people"></i>

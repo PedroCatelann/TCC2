@@ -12,6 +12,9 @@ from flask_login import LoginManager, login_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from user import User
+from visualization import Visualization
+import os
+import uuid
 
 app = Flask(__name__)
 
@@ -90,8 +93,39 @@ def listuser():
         print(results_as_dict)
     return render_template('listuser.html', dictionary = results_as_dict)
 
-@app.route('/deleteuser/<id>',  methods=['GET','POST'])
+@app.route('/savevisualization/<info>',  methods=['POST'])
+def savevisualization(info):
+    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    print(info)
+    iduser = session['id']
+    print(iduser)
+    guid = uuid.uuid4()
+    if info == 'retina':
+        os.rename(r'./static/r.jpg',r'./static/'+ str(guid) + '.jpg')
+    else:
+        os.rename(r'./static/image0.jpg',r'./static/'+ str(guid) + '.jpg')
+        
+    visualization = Visualization(link = str(guid) + '.jpg',users_id=iduser)
+    db.session.add(visualization)
+    db.session.commit()
+    return redirect(url_for('listuser'))
+
+@app.route('/seevisualization',  methods=['GET'])
+def seevisualization():
+
+    iduser = session['id']
+    print(iduser)
+    query = f"SELECT * FROM visualization WHERE users_id = {iduser}"
+    with db.engine.connect() as conn:
+        result = conn.execute(text(query))
+        results_as_dict = result.mappings().all()
+        print(results_as_dict)
+    return render_template('seevisualization.html', dictionary = results_as_dict)
+
+    
+@app.route('/deleteuser/<id>',  methods=['POST'])
 def deleteuser(id):
+    
     obj = db.session.query(User).filter(User.id_users==id).first()
     db.session.delete(obj)
     db.session.commit()
@@ -149,22 +183,23 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        print("AAAAAAAAAA")
         query = f"SELECT * FROM users where email = '{email}'"
-        print(query)
         if query:
             with db.engine.connect() as conn:
                 result = conn.execute(text(query))
-                results_as_dict = result.mappings().all()
-                print(results_as_dict[0].user_type)
+                results_as_dict = result.first()
+                
                 if results_as_dict:               
-                    session['name'] = results_as_dict[0].user_type
+                    teste = results_as_dict._asdict()
+                    session['user_type'] = teste['user_type']
+                    session['id'] = teste['id_users']
+    
                     return redirect(url_for('index'))
     return render_template('login.html')
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    session['name'] = ''
+    session['user_type'] = ''
     return redirect(url_for('login'))
 
 @app.route('/home', methods=['GET'])

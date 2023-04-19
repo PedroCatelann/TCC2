@@ -26,7 +26,31 @@
   {% include 'navbar.html' %}
   
   <div class="row align-items-center" style="height: 90vh;">
-    <div class="mx-auto col-4 col-md-4 col-lg-4">
+    <div class="mx-auto col-3 col-md-3 col-lg-3">
+      <div class="card mb-6" enctype=multipart/form-data method="post">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Imagem Original </h5>
+            <hr>
+            <div class="d-flex align-items-start justify-content-between">
+              <div>
+                <p class=""> </p>
+
+              </div>
+            </div>
+            
+            
+            
+          </div>
+          <img src="../static/original_image.jpg" class="card-img-bottom">
+
+
+        </div>
+          
+      
+      </div>
+    </div>
+    <div class="mx-auto col-3 col-md-3 col-lg-3">
       <div class="card mb-6" enctype=multipart/form-data method="post">
         <div class="card">
           <div class="card-body">
@@ -37,7 +61,7 @@
                 <p class="">Número de detecções: {{num_yolo}} </p>
 
               </div>
-              <button type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+              <button onclick="saveVisualizationYOLO()" type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
             </div>
             
             
@@ -52,7 +76,7 @@
       </div>
     </div>
 
-    <div class="mx-auto col-4 col-md-4 col-lg-4">
+    <div class="mx-auto col-3 col-md-3 col-lg-3">
       <div class="card mb-6" enctype=multipart/form-data method="post">
         <div class="card">
           <div class="card-body">
@@ -63,7 +87,7 @@
                 <p class="">Número de detecções: {{num_retina}} </p>
 
               </div>
-              <button type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+              <button onclick="saveVisualizationRetina()" type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
             </div>
             
             
@@ -82,8 +106,26 @@
 
 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+  function saveVisualizationRetina(){
 
-<!-- Github Ribbon Start-->
+    $.ajax({
+      type : 'POST',
+      url : "{{url_for('savevisualization',info='retina')}}",
+      contentType: 'application/json;charset=UTF-8',
+    });
+  }
+  function saveVisualizationYOLO(){
+
+    $.ajax({
+      type : 'POST',
+      url : "{{url_for('savevisualization',info='yolo')}}",
+      contentType: 'application/json;charset=UTF-8',
+    });
+  }
+
+</script>
 
 <style>
   .github-corner:hover .octo-arm {
