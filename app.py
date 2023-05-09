@@ -2,25 +2,29 @@ import io
 from operator import truediv
 import os
 import json
-from PIL import Image
+from PIL import Image, ImageDraw
+import cv2
+from numpy import asarray
 import torch
 from flask import Flask, jsonify, url_for, render_template, request, redirect, session
 from werkzeug.utils import secure_filename
 from crop import func
 from retina_net import detect
-from flask_login import LoginManager, login_user, logout_user
+from retina_net_multifiles import detectmult
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from user import User
 from visualization import Visualization
 import os
+from io import BytesIO
 import uuid
 
 app = Flask(__name__)
 
 RESULT_FOLDER = os.path.join('imagens')
 app.config['RESULT_FOLDER'] = RESULT_FOLDER
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/flask_login'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/flask_login'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://ktlan:1234@localhost/flask_login'
 app.config['SECRET_KEY'] = 'secret'
 # login_manager = LoginManager(app)
 db = SQLAlchemy(app)
@@ -55,14 +59,19 @@ def predict():
 
         crd = request.form['coordinates']
         file = request.files['img']
+        cowNumber = request.form['cowNumber']
         filename = request.files['img'].filename
         im = func(crd,filename)
+        print("AAAAAAAA")
+        print(type(im))
         # filename = secure_filename(file.filename)
         num_retina = detect(filename)
         img_bytes = file.read()
         
         with open(im, "rb") as image:
+            print(type(image))
             f = image.read()
+            print(type(f))
             results = get_prediction(f)            
 
             num_yolo = len(results.pandas().xyxy[0]['class'])
@@ -72,9 +81,67 @@ def predict():
         # file.save(os.path.join(app.config['RESULT_FOLDER'], filename))
         # img = os.path.join(app.config['RESULT_FOLDER'], filename)
         # return render_template('result.html',result_image = filename,model_name = model_name)
-        return render_template('result.html',num_yolo = num_yolo, num_retina = num_retina)
+        return render_template('result.html',num_yolo = num_yolo, num_retina = num_retina, cowNumber = cowNumber)
 
     # return render_template('index.html')
+
+@app.route('/processingmanyfiles', methods=['GET','POST'])
+def processingmanyfiles():
+    retina_array = []
+    yolo_array = []
+    if request.method == 'POST':
+        d = request.files
+        files = list(d.lists())
+
+        for img in files:
+            for a in img[1:len(img)]:
+                for b in a:
+                    img = Image.open(b).convert('RGB')
+                    retina = detectmult(img)
+                    retina_array.append(retina)
+                    
+
+                    numpydata = asarray(img)
+                    
+                    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + b.filename, numpydata)
+
+                    with open("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + b.filename, "rb") as image:
+                        f = image.read()
+                        results = get_prediction(f)            
+                        guid = uuid.uuid4()
+                        results.save(save_dir='static')
+                        os.rename('./static/image0.jpg','./static/' + str(guid) + ".jpg")
+                        num_yolo = len(results.pandas().xyxy[0]['class'])
+                        
+                        yolo_array.append((num_yolo,'./static/' + str(guid) + ".jpg"))
+                        
+        retina_total = 0
+        yolo_total = 0
+        retina_image_array = []
+        yolo_image_array = []
+        for x in retina_array:
+            retina_total = retina_total + x[0]
+            retina_image_array.append(x[1])
+        print(retina_total)
+
+        for x in yolo_array:
+            yolo_total = yolo_total + x[0]
+            yolo_image_array.append(x[1])
+
+        print(yolo_total)
+        return render_template('resultmulti.html',retina_total = retina_total, yolo_total = yolo_total, retina_image_array = retina_image_array, yolo_image_array = yolo_image_array)
+
+        
+
+
+                    
+
+                    
+                    
+
+
+
+    return render_template('processingmanyfiles.html')
 
 @app.route('/processing', methods=['GET'])
 def index():

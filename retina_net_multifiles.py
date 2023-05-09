@@ -9,16 +9,17 @@ from PIL import Image, ImageDraw
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import shutil
+import uuid
 import requests
-def detect(i):
-    response = requests.get('https://i.ytimg.com/vi/q71MCWAEfL8/maxresdefault.jpg')
-    img = Image.open('A.jpg').convert('RGB')
+def detectmult(img):
+    print("CHEGOU NO MULTI")
     print(np.array(img).shape)
 
     weights = RetinaNet_ResNet50_FPN_V2_Weights.DEFAULT
     model = retinanet_resnet50_fpn_v2(weights=weights, score_thresh=0.35)
     # Put the model in inference mode
     model.eval()
+    guid = uuid.uuid4()
     # Get the transforms for the model's weights
     preprocess = weights.transforms()
 
@@ -53,7 +54,7 @@ def detect(i):
     # ax.imshow(im)
     # cv2.imwrite("static/r.jpg", numpydata)
 
-    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/r.jpg", numpydata)
+    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + str(guid) + ".jpg", numpydata)
 
-    return len(prediction["labels"])
+    return len(prediction["labels"]), "C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + str(guid) + ".jpg"
     # plt.show()

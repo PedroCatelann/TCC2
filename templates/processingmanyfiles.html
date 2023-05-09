@@ -1,0 +1,62 @@
+{% include 'navbar.html' %}
+  <div class="row align-items-center" style="height: 100vh;">
+    
+    
+    <div class="mx-auto col-10 col-md-8 col-lg-6">
+      <form class="form-signin card mb-6" method=post enctype=multipart/form-data>
+        <div class="p-5" style="border-bottom: 2px solid lightgray;">
+          <h4>Selecione várias imagens</h4>
+        </div>
+        <div class="form-group p-5">
+            <input id='fileInput' class="form-control mt-3" multiple  name="img" type="file">
+        </div>    
+        <div class="d-flex justify-content-center p-5">
+          <output id="list"></output>
+        </div>
+        <div class="modal fade row align-items-center" role="dialog" id="imgmodal">
+          <div class="modal-dialog mx-auto col-6 col-md-6 col-lg-6"></div>
+
+          <div class="modal-dialog mx-auto col-6 col-md-6 col-lg-6">
+              <div class="modal-content">
+                <img class="img-responsive" src="" id="show-img">         
+              </div>          
+              </div>
+          </div>
+          <input type="submit" class="btn btn-primary" style="width:100% ; opacity: 1.0 !important;" value="Logar">
+
+      </form>
+    </div>
+  </div>
+
+  <script>
+    
+    function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0, f; f = files[i]; i++) {
+
+      // Only process image files.
+      if (!f.type.match('image.*')) {
+        continue;
+      }
+
+      var reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          // Render thumbnail.
+          var span = document.createElement('span');
+          span.innerHTML = ['<img class="img-thumbnail" width="250px" height="250px" src="', e.target.result,
+                            '" title="', escape(theFile.name), '"/>'].join('');
+          document.getElementById('list').insertBefore(span, null);
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(f);
+    }
+  }
+
+document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+  </script>

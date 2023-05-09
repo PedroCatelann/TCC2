@@ -1,10 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, logout_user, LoginManager
 
 db = SQLAlchemy()
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__ = "users"
     id_users = db.Column(db.Integer, autoincrement = True, primary_key = True)
     name = db.Column(db.String(45), nullable = False)

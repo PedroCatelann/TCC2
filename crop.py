@@ -1,5 +1,7 @@
 import numpy as np
 import cv2
+import os, stat
+import shutil
 # if __name__ == '__main__':
 def func(crd, name):
     print("CHEGOU NO CROP")
@@ -23,10 +25,16 @@ def func(crd, name):
     cv2.bitwise_not(wbg,wbg, mask=mask)
     # overlap the resulted cropped image on the white background
     dst = wbg+res
-  
-    cv2.imwrite("A.jpg", dst)
-    cv2.imwrite("./static/original_image.jpg", dst)
-    return "A.jpg"
+    
+    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/A.jpg", dst)
+    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/original_image.jpg", dst)
+
+    return "C:/Users/pedro/OneDrive/Ambiente de Trabalho/A.jpg"
+    
+    # cv2.imwrite("A.jpg", dst)
+    # cv2.imwrite("./static/original_image.jpg", dst)
+    # return "A.jpg"
+
     # cv2.imshow("Samed Size White Image", dst)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
