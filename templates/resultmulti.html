@@ -24,9 +24,23 @@
 
 <body class="text-center">
   {% include 'navbar.html' %}
-  
+  {% if session['user_type'] == '' %}
+  <div class="row align-items-center" style="height: 100vh;">
+    <div class="d-flex justify-content-center fw-bold">
+        <div class="p-3 mb-2 bg-danger text-white rounded">FAÇA LOGIN PARA CONTINUAR</div>
+        
+      </div>
+  </div>
+  {%else%}
   <div class="row align-items-center" style="height: 90vh;">
-    
+    <div class="d-flex justify-content-center fw-bold">
+      {%if closest == "BOTH"%}
+      <div class="p-3 mb-2 bg-success text-white rounded">AMBAS AS IA'S SE COMPORTARAM DE FORMA SEMELHANTE</div>
+      {%else%}
+      <div class="p-3 mb-2 bg-success text-white rounded">A IA QUE MELHOR SE COMPORTA NESSA VISUALIZAÇÃO É A {{closest}}</div>
+      {%endif%}
+      
+    </div>
     <div class="mx-auto col-5 col-md-5 col-lg-5">
       <div id="geral" class="card mb-6" enctype=multipart/form-data method="post">
         <div class="card p-5">
@@ -56,36 +70,36 @@
     </div>
 
     <div class="mx-auto col-5 col-md-5 col-lg-5">
-      <div class="card mb-6" enctype=multipart/form-data method="post">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">YOLO </h5>
-              <hr>
-              <div class="d-flex align-items-start justify-content-between">
-                <div>
-                  <p class="">Total de detecções: {{retina_total}} </p>
-  
-                </div>
+      <div id="geral" class="card mb-6" enctype=multipart/form-data method="post">
+        <div class="card p-5">
+          <div class="card-body">
+            <h5 class="card-title">RetinaNet </h5>
+            <hr>
+            <div class="d-flex align-items-start justify-content-between">
+              <div>
+                <p class="">Total de detecções: {{retina_total}} </p>
+
               </div>
-              
-              
-              
             </div>
-            {% for i in retina_image_array %}
-                <img src="{{i}}" class="card-img-bottom">
-            {% endfor %}
-  
-  
-  
-          </div>
             
-        
+            
+            
+          </div>
+          {% for i in retina_image_array %}
+              <img src="{{i}}" class="card-img-bottom mt-5">
+          {% endfor %}
+
+
+
         </div>
+          
+      
       </div>
+    </div>
 
     
   </div>
-
+  {%endif%}
 
 
 </body>

@@ -5,6 +5,7 @@ import json
 from PIL import Image, ImageDraw
 import cv2
 from numpy import asarray
+import numpy as np
 import torch
 from flask import Flask, jsonify, url_for, render_template, request, redirect, session
 from werkzeug.utils import secure_filename
@@ -56,10 +57,15 @@ def image():
 def predict():
 
     if request.method == 'POST':
-
+        total_array = []
         crd = request.form['coordinates']
+        if len(crd) == 0:
+            return render_template('errorpage.html',error = 'SELECIONE AS COORDENADAS NA IMAGEM')
+
         file = request.files['img']
         cowNumber = request.form['cowNumber']
+        if cowNumber == '':
+            return render_template('errorpage.html',error = 'DIGITE O NÚMERO DE ANIMAIS NA IMAGEM')
         filename = request.files['img'].filename
         im = func(crd,filename)
         print("AAAAAAAA")
@@ -67,21 +73,33 @@ def predict():
         # filename = secure_filename(file.filename)
         num_retina = detect(filename)
         img_bytes = file.read()
-        
+        num_yolo = 0
         with open(im, "rb") as image:
             print(type(image))
             f = image.read()
             print(type(f))
             results = get_prediction(f)            
-
-            num_yolo = len(results.pandas().xyxy[0]['class'])
+            for i in results.pandas().xyxy[0]['class']:
+                if i == 19:
+                    num_yolo = num_yolo + 1      
+            
             results.save(save_dir='static')
-       
+        closest = ''
+        if num_retina == num_yolo:
+            closest = "BOTH"
+        else:
+            total_array.append(int(num_retina))
+            total_array.append(int(num_yolo))
+            val=closest_value(total_array,int(cowNumber))
+            if val == num_yolo:
+                closest = "YOLO"
+            else:
+                closest = "RETINANET"
         # filename = 'aaaa.jpg'
         # file.save(os.path.join(app.config['RESULT_FOLDER'], filename))
         # img = os.path.join(app.config['RESULT_FOLDER'], filename)
         # return render_template('result.html',result_image = filename,model_name = model_name)
-        return render_template('result.html',num_yolo = num_yolo, num_retina = num_retina, cowNumber = cowNumber)
+        return render_template('result.html',num_yolo = num_yolo, num_retina = num_retina, cowNumber = cowNumber, closest = closest)
 
     # return render_template('index.html')
 
@@ -89,9 +107,13 @@ def predict():
 def processingmanyfiles():
     retina_array = []
     yolo_array = []
+    num_yolo = 0
     if request.method == 'POST':
         d = request.files
         files = list(d.lists())
+        cowNumber = request.form['cowNumber']
+        if cowNumber == '':
+            return render_template('errorpage.html',error = 'DIGITE O NÚMERO DE ANIMAIS NA IMAGEM')
 
         for img in files:
             for a in img[1:len(img)]:
@@ -107,17 +129,19 @@ def processingmanyfiles():
 
                     with open("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + b.filename, "rb") as image:
                         f = image.read()
-                        results = get_prediction(f)            
+                        results = get_prediction(f)  
+                        for i in results.pandas().xyxy[0]['class']:
+                            if i == 19:
+                                num_yolo = num_yolo + 1              
                         guid = uuid.uuid4()
                         results.save(save_dir='static')
-                        os.rename('./static/image0.jpg','./static/' + str(guid) + ".jpg")
-                        num_yolo = len(results.pandas().xyxy[0]['class'])
-                        
+                        os.rename('./static/image0.jpg','./static/' + str(guid) + ".jpg")                        
                         yolo_array.append((num_yolo,'./static/' + str(guid) + ".jpg"))
                         
         retina_total = 0
         yolo_total = 0
         retina_image_array = []
+        total_array = []
         yolo_image_array = []
         for x in retina_array:
             retina_total = retina_total + x[0]
@@ -129,7 +153,19 @@ def processingmanyfiles():
             yolo_image_array.append(x[1])
 
         print(yolo_total)
-        return render_template('resultmulti.html',retina_total = retina_total, yolo_total = yolo_total, retina_image_array = retina_image_array, yolo_image_array = yolo_image_array)
+        closest = ''
+        total_array.append(int(retina_total))
+        total_array.append(int(yolo_total))
+        val=closest_value(total_array,int(cowNumber))
+        if retina_total == yolo_total:
+            closest = "BOTH"
+        else:
+            if val == yolo_total:
+                closest = "YOLO"
+            else:
+                closest = "RETINANET"
+
+        return render_template('resultmulti.html',retina_total = retina_total, yolo_total = yolo_total, retina_image_array = retina_image_array, yolo_image_array = yolo_image_array, closest = closest)
 
         
 
@@ -162,7 +198,6 @@ def listuser():
 
 @app.route('/savevisualization/<info>',  methods=['POST'])
 def savevisualization(info):
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     print(info)
     iduser = session['id']
     print(iduser)
@@ -175,7 +210,7 @@ def savevisualization(info):
     visualization = Visualization(link = str(guid) + '.jpg',users_id=iduser)
     db.session.add(visualization)
     db.session.commit()
-    return redirect(url_for('listuser'))
+    return redirect(url_for('listuser'), code=201)
 
 @app.route('/seevisualization',  methods=['GET'])
 def seevisualization():
@@ -190,9 +225,10 @@ def seevisualization():
     return render_template('seevisualization.html', dictionary = results_as_dict)
 
     
-@app.route('/deleteuser/<id>',  methods=['POST'])
+@app.route('/deleteuser/<id>',  methods=['GET','POST'])
 def deleteuser(id):
     
+    print("CAIU AQUIIIIIIIII")
     obj = db.session.query(User).filter(User.id_users==id).first()
     db.session.delete(obj)
     db.session.commit()
@@ -240,7 +276,7 @@ def register():
             user = User(name, email, password,user_type)
             db.session.add(user)
             db.session.commit()
-            return redirect(url_for('register'))
+            return redirect(url_for('listuser'))
     
     return render_template('register.html')
 
@@ -272,3 +308,11 @@ def logout():
 @app.route('/home', methods=['GET'])
 def home():
     return render_template('home.html')
+
+def closest_value(input_list, input_value):
+
+  arr = np.asarray(input_list)
+
+  i = (np.abs(arr - input_value)).argmin()
+
+  return arr[i]

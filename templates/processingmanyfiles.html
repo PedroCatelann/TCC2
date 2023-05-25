@@ -1,4 +1,12 @@
 {% include 'navbar.html' %}
+{% if session['user_type'] == '' %}
+<div class="row align-items-center" style="height: 100vh;">
+  <div class="d-flex justify-content-center fw-bold">
+      <div class="p-3 mb-2 bg-danger text-white rounded">FAÇA LOGIN PARA CONTINUAR</div>
+      
+    </div>
+</div>
+{%else%}
   <div class="row align-items-center" style="height: 100vh;">
     
     
@@ -9,6 +17,8 @@
         </div>
         <div class="form-group p-5">
             <input id='fileInput' class="form-control mt-3" multiple  name="img" type="file">
+            <input class="form-control mt-3" id="cowNumber" name="cowNumber" type="number" placeholder="Qual é a soma de todos os animais presentes em todas as imagens?">
+
         </div>    
         <div class="d-flex justify-content-center p-5">
           <output id="list"></output>
@@ -22,14 +32,27 @@
               </div>          
               </div>
           </div>
-          <input type="submit" class="btn btn-primary" style="width:100% ; opacity: 1.0 !important;" value="Logar">
+          <button onclick="send()" class="btn btn-primary">
+            Upload
+          </button>
 
       </form>
     </div>
   </div>
-
+{%endif%}
   <script>
-    
+    function send() {
+      
+      Swal.fire({
+
+        title:"Tratamento iniciado! Aguarde...",
+        html: "<img src='../static/Hourglass.gif'>",
+        allowOutsideClick: false,
+        showConfirmButton: false
+
+      })
+      }
+
     function handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
     // Loop through the FileList and render image files as thumbnails.

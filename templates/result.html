@@ -24,9 +24,24 @@
 
 <body class="text-center">
   {% include 'navbar.html' %}
-  
+  {% if session['user_type'] == '' %}
+  <div class="row align-items-center" style="height: 100vh;">
+    <div class="d-flex justify-content-center fw-bold">
+        <div class="p-3 mb-2 bg-danger text-white rounded">FAÇA LOGIN PARA CONTINUAR</div>
+        
+      </div>
+  </div>
+  {%else%}
   <div class="row align-items-center" style="height: 90vh;">
-    <p>{{cowNumber}}</p>
+    <div class="d-flex justify-content-center fw-bold">
+      {%if closest == "BOTH"%}
+      <div class="p-3 mb-2 bg-success text-white rounded">AMBAS AS IA'S SE COMPORTARAM DE FORMA SEMELHANTE</div>
+      {%else%}
+      <div class="p-3 mb-2 bg-success text-white rounded">A IA QUE MELHOR SE COMPORTA NESSA VISUALIZAÇÃO É A {{closest}}</div>
+      {%endif%}
+
+      
+    </div>
     <div class="mx-auto col-3 col-md-3 col-lg-3">
       <div class="card mb-6" enctype=multipart/form-data method="post">
         <div class="card">
@@ -52,6 +67,7 @@
       
       </div>
     </div>
+    {%if closest == "BOTH"%}
     <div class="mx-auto col-3 col-md-3 col-lg-3">
       <div class="card mb-6" enctype=multipart/form-data method="post">
         <div class="card">
@@ -95,7 +111,7 @@
             
             
           </div>
-          <img src="C:/Users/pedro/OneDrive/Ambiente de Trabalho/r.jpg" class="card-img-bottom">
+          <img src="../static/r.jpg" class="card-img-bottom">
 
 
         </div>
@@ -103,7 +119,123 @@
       
       </div>
     </div>
+    {%else%}
+
+      {%if closest == "YOLO"%}
+      <div class="mx-auto col-3 col-md-3 col-lg-3">
+        <div class="card mb-6" enctype=multipart/form-data style="border-style: solid;border-color: green;border-width: 8px;" method="post">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">YOLO </h5>
+              <hr>
+              <div class="d-flex align-items-start justify-content-between">
+                <div>
+                  <p class="">Número de detecções: {{num_yolo}} </p>
+
+                </div>
+                <button onclick="saveVisualizationYOLO()" type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+              </div>
+              
+              
+              
+            </div>
+            <img src="../static/image0.jpg" class="card-img-bottom">
+
+
+          </div>
+            
+        
+        </div>
+      </div>
+      {% else %}
+      <div class="mx-auto col-3 col-md-3 col-lg-3">
+        <div class="card mb-6" enctype=multipart/form-data method="post">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">YOLO </h5>
+              <hr>
+              <div class="d-flex align-items-start justify-content-between">
+                <div>
+                  <p class="">Número de detecções: {{num_yolo}} </p>
+
+                </div>
+                <button onclick="saveVisualizationYOLO()" type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+              </div>
+              
+              
+              
+            </div>
+            <img src="../static/image0.jpg" class="card-img-bottom">
+
+
+          </div>
+            
+        
+        </div>
+      </div>
+      {% endif %}
+
+      {%if closest == "RETINANET"%}
+      <div class="mx-auto col-3 col-md-3 col-lg-3">
+        <div class="card mb-6" enctype=multipart/form-data style="border-style: solid;border-color: green;border-width: 8px;" method="post">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">RetinaNet </h5>
+              <hr>
+              <div class="d-flex align-items-start justify-content-between">
+                <div>
+                  <p class="">Número de detecções: {{num_retina}} </p>
+
+                </div>
+                <button onclick="saveVisualizationYOLO()" type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+              </div>
+              
+              
+              
+            </div>
+            <img src="../static/r.jpg" class="card-img-bottom">
+
+
+          </div>
+            
+        
+        </div>
+      </div>
+      {%else%}
+      <div class="mx-auto col-3 col-md-3 col-lg-3">
+        <div class="card mb-6" enctype=multipart/form-data method="post">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">RetinaNet </h5>
+              <hr>
+              <div class="d-flex align-items-start justify-content-between">
+                <div>
+                  <p class="">Número de detecções: {{num_retina}} </p>
+
+                </div>
+                <button onclick="saveVisualizationRetina()" type="button" class="btn btn-outline-success btn-sm">Salvar visualização <i class="fas fa-download"></i></button>
+              </div>
+              
+              
+              
+            </div>
+            <img src="../static/r.jpg" class="card-img-bottom">
+
+
+          </div>
+            
+        
+        </div>
+      </div>
+      {% endif %}
+
+    {% endif %}
+    
+
+    
   </div>
+
+  {%endif%}
 
 
 
@@ -116,6 +248,20 @@
       type : 'POST',
       url : "{{url_for('savevisualization',info='retina')}}",
       contentType: 'application/json;charset=UTF-8',
+      success: function(response) {
+        if(response) {
+          Swal.fire({
+                icon: 'success',
+                text:'Visualização salva com sucesso!'
+              });
+          }
+          else {
+            Swal.fire({
+                  icon: 'error',
+                  text:'Ocorreu um erro ao salvar a visualização!'
+                });
+            }
+          }
     });
   }
   function saveVisualizationYOLO(){
@@ -124,6 +270,20 @@
       type : 'POST',
       url : "{{url_for('savevisualization',info='yolo')}}",
       contentType: 'application/json;charset=UTF-8',
+      success: function(response) {
+        if(response) {
+          Swal.fire({
+                icon: 'success',
+                text:'Visualização salva com sucesso!'
+              });
+          }
+          else {
+            Swal.fire({
+                  icon: 'error',
+                  text:'Ocorreu um erro ao salvar a visualização!'
+                });
+            }
+          }
     });
   }
 

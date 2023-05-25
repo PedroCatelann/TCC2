@@ -8,7 +8,14 @@
 <body class="text-center overflow-hidden">
     
     {% include 'navbar.html' %}
-
+    {% if session['user_type'] == '' %}
+    <div class="row align-items-center" style="height: 100vh;">
+      <div class="d-flex justify-content-center fw-bold">
+          <div class="p-3 mb-2 bg-danger text-white rounded">FAÇA LOGIN PARA CONTINUAR</div>
+          
+        </div>
+    </div>
+    {%else%}
 
     <div class="row align-items-center" style="height: 90vh;">
       
@@ -33,8 +40,8 @@
                 <div class="form-outline mb-4">
                   <input type="password" name="password" placeholder="Insira a senha do usuário" class="form-control" />
                 </div>
-                <div class="form-outline mb-4">
-                    <span class="form-check-label" for="flexSwitchCheckDefault">Usuário Administrador</span>
+                <div class="form-outline mb-4 d-flex flex-row">
+                    <span class="form-check-label px-1" for="flexSwitchCheckDefault">Usuário Administrador</span>
                     <input class="form-check-input form-control" type="checkbox" name="isAdmin" id="flexSwitchCheckDefault">
                 </div>
 
@@ -47,4 +54,5 @@
         </form>
       </div>
     </div>
+    {%endif%}
 </body>

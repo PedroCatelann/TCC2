@@ -51,9 +51,13 @@ def detect(i):
     numpydata = np.array(im)
  
     # ax.imshow(im)
-    # cv2.imwrite("static/r.jpg", numpydata)
+    cv2.imwrite("static/r.jpg", numpydata)
+    print("labels: " + str(prediction["labels"]))
+    retina_num = 0
+    for i in prediction["labels"]:
+        if i == 21:
+            retina_num = retina_num + 1
+    # cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/r.jpg", numpydata)
 
-    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/r.jpg", numpydata)
-
-    return len(prediction["labels"])
+    return retina_num
     # plt.show()

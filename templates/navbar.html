@@ -8,6 +8,8 @@
       crossorigin="anonymous"></script>
       <script src="/static/script.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   
     <style>
       body {
@@ -35,10 +37,17 @@
       }
     </style>
     <link rel="stylesheet" href="/static/style.css">
-  
+    <link rel="icon" 
+    type="image/jpg" 
+    src="../static/220127.jpg">
   </head>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-around text-white font-weight-bold">
     <!-- <img src="../static/logobranco.jpg" style="height: 30px; width: 30px;"> -->
+    {% if session['user_type'] == '' %}
+    <a href="/login" class="text-white">
+      LOGIN
+    </a>
+    {%else%}
     <div class="d-flex flex-row">
 
         <div class="dropdown">
@@ -75,4 +84,5 @@
     <a href="/logout" class="text-white">
         <i class="bi bi-box-arrow-right"></i>
     </a>
+    {%endif%}
   </nav>

@@ -54,7 +54,10 @@ def detectmult(img):
     # ax.imshow(im)
     # cv2.imwrite("static/r.jpg", numpydata)
 
-    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + str(guid) + ".jpg", numpydata)
-
-    return len(prediction["labels"]), "C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + str(guid) + ".jpg"
+    cv2.imwrite("static/" + str(guid) + ".jpg", numpydata)
+    retina_num = 0
+    for i in prediction["labels"]:
+        if i == 21:
+            retina_num = retina_num + 1
+    return retina_num, "static/" + str(guid) + ".jpg"
     # plt.show()

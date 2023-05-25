@@ -8,7 +8,14 @@
 <body class="text-center overflow-hidden">
     
     {% include 'navbar.html' %}
-
+    {% if session['user_type'] == '' %}
+    <div class="row align-items-center" style="height: 100vh;">
+      <div class="d-flex justify-content-center fw-bold">
+          <div class="p-3 mb-2 bg-danger text-white rounded">FAÇA LOGIN PARA CONTINUAR</div>
+          
+        </div>
+    </div>
+    {%else%}
 
     <div class="row align-items-center" style="height: 90vh;">
       
@@ -34,15 +41,15 @@
                     <input type="password" name="password" value="{{i.password}}" class="form-control" />
                   </div>
                   {% if i.user_type == 'ADMIN' %}
-                  <div class="form-outline mb-4">
-                    <span class="form-check-label" for="flexSwitchCheckDefault">Usuário Administrador</span>
+                  <div class="form-outline mb-4 d-flex flex-row">
+                    <span class="form-check-label px-1" for="flexSwitchCheckDefault">Usuário Administrador</span>
                     <input class="form-check-input form-control" type="checkbox" name="isAdmin" checked id="flexSwitchCheckDefault">
                   </div>
                   {% else %}
-                  <div class="form-outline mb-4">
-                    <span class="form-check-label" for="flexSwitchCheckDefault">Usuário Administrador</span>
+                  <div class="form-outline mb-4 d-flex flex-row">
+                    <span class="form-check-label px-1" for="flexSwitchCheckDefault">Usuário Administrador</span>
                     <input class="form-check-input form-control" type="checkbox" name="isAdmin" id="flexSwitchCheckDefault">
-                  </div>
+                </div>
                   {% endif %}
                 
 
@@ -55,4 +62,6 @@
         </form>
       </div>
     </div>
+
+    {%endif%}
 </body>

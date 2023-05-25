@@ -26,14 +26,14 @@ def func(crd, name):
     # overlap the resulted cropped image on the white background
     dst = wbg+res
     
-    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/A.jpg", dst)
-    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/original_image.jpg", dst)
+    # cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/A.jpg", dst)
+    # cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/original_image.jpg", dst)
 
-    return "C:/Users/pedro/OneDrive/Ambiente de Trabalho/A.jpg"
+    # return "C:/Users/pedro/OneDrive/Ambiente de Trabalho/A.jpg"
     
-    # cv2.imwrite("A.jpg", dst)
-    # cv2.imwrite("./static/original_image.jpg", dst)
-    # return "A.jpg"
+    cv2.imwrite("A.jpg", dst)
+    cv2.imwrite("./static/original_image.jpg", dst)
+    return "A.jpg"
 
     # cv2.imshow("Samed Size White Image", dst)
     # cv2.waitKey(0)
