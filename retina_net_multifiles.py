@@ -12,9 +12,6 @@ import shutil
 import uuid
 import requests
 def detectmult(img):
-    print("CHEGOU NO MULTI")
-    print(np.array(img).shape)
-
     weights = RetinaNet_ResNet50_FPN_V2_Weights.DEFAULT
     model = retinanet_resnet50_fpn_v2(weights=weights, score_thresh=0.35)
     # Put the model in inference mode
@@ -33,10 +30,6 @@ def detectmult(img):
     # Convert the PIL image to Torch tensor
     img = transform(img)
     labels = [weights.meta["categories"][i] for i in prediction["labels"]]
-    print('='*50)
-
-    print(len(prediction["labels"]))
-    print('='*50)
 
     transform = transforms.Compose([transforms.PILToTensor()])
 

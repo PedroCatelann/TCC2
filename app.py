@@ -118,6 +118,7 @@ def processingmanyfiles():
         for img in files:
             for a in img[1:len(img)]:
                 for b in a:
+                    num_yolo = 0
                     img = Image.open(b).convert('RGB')
                     retina = detectmult(img)
                     retina_array.append(retina)
@@ -130,7 +131,10 @@ def processingmanyfiles():
                     with open("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + b.filename, "rb") as image:
                         f = image.read()
                         results = get_prediction(f)  
+                        print(results.pandas().xyxy[0]['class'])
                         for i in results.pandas().xyxy[0]['class']:
+                            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+                            print(i)
                             if i == 19:
                                 num_yolo = num_yolo + 1              
                         guid = uuid.uuid4()
@@ -148,9 +152,12 @@ def processingmanyfiles():
             retina_image_array.append(x[1])
         print(retina_total)
 
-        for x in yolo_array:
-            yolo_total = yolo_total + x[0]
-            yolo_image_array.append(x[1])
+        print("YOLO ARRAY")
+        print(yolo_array)
+
+        for y in yolo_array:
+            yolo_total = yolo_total + y[0]
+            yolo_image_array.append(y[1])
 
         print(yolo_total)
         closest = ''
