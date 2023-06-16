@@ -19,6 +19,7 @@ from visualization import Visualization
 import os
 from io import BytesIO
 import uuid
+import math
 
 app = Flask(__name__)
 
@@ -108,25 +109,36 @@ def processingmanyfiles():
     retina_array = []
     yolo_array = []
     array_numbers = []
+    percent_yolo_array = []
+    percent_retina_array = []
     retina_number_array = []
     yolo_number_array = []
     num_yolo = 0
     if request.method == 'POST':
         d = request.files
         files = list(d.lists())
-        cowNumber = request.form['cowNumber']
-        if cowNumber == '':
-            return render_template('errorpage.html',error = 'DIGITE O NÚMERO DE ANIMAIS NA IMAGEM')
+        print(files)
+        # cowNumber = request.form['cowNumber']
+        # if cowNumber == '':
+        #     return render_template('errorpage.html',error = 'DIGITE O NÚMERO DE ANIMAIS NA IMAGEM')
 
         for img in files:
             for a in img[1:len(img)]:
                 for b in a:
+                    print("Files")
+                    print(b.filename)
+                    num_animais = b.filename.split(" ")
+                    try:
+                        num_anm = int(num_animais[0])
+                    
+                    except:
+                        return render_template('errorpage.html',error = 'FORMATO DE IMAGEM ERRADO')
                     num_yolo = 0
                     img = Image.open(b).convert('RGB')
-                    retina = detectmult(img)
-                    print("RETINA ARRAY")
+                    retina = detectmult(img, num_anm)
                     retina_number_array.append(retina[0])
                     retina_array.append(retina)
+
 
                     numpydata = asarray(img)
                     
@@ -135,14 +147,24 @@ def processingmanyfiles():
                     with open("./static/" + b.filename, "rb") as image:
                         f = image.read()
                         results = get_prediction(f)  
-                        print(results.pandas().xyxy[0]['class'])
+                        # print(results.pandas().xyxy[0]['class'])
                         for i in results.pandas().xyxy[0]['class']:
                             if i == 19:
-                                num_yolo = num_yolo + 1              
+                                num_yolo = num_yolo + 1         
+
+                        if num_anm >= num_yolo:
+                            percent_yolo = num_yolo/num_anm
+                        else:
+                            percent_yolo = num_anm/num_yolo
+
+                        print(percent_yolo)
+
                         guid = uuid.uuid4()
                         results.save(save_dir='static')
                         os.rename('./static/image0.jpg','./static/' + str(guid) + ".jpg")     
-                        yolo_number_array.append(num_yolo)                   
+                        yolo_number_array.append(num_yolo) 
+                        percent_yolo_array.append(percent_yolo)
+                        percent_retina_array.append(retina[2])
                         yolo_array.append((num_yolo,'./static/' + str(guid) + ".jpg"))
                         
         retina_total = 0
@@ -150,33 +172,39 @@ def processingmanyfiles():
         retina_image_array = []
         total_array = []
         yolo_image_array = []
+        print("AAAAAAAAAAAAAAAAAAAAAAA")
+        print("Retina Percent Array")
+        print(percent_retina_array)
+        yolo_mean = np.mean(percent_yolo_array)
+        retina_mean = np.mean(percent_retina_array)
+        print(yolo_mean)
+        print(retina_mean)
+
         for x in retina_array:
             retina_total = retina_total + x[0]
             retina_image_array.append(x[1])
-        print(retina_total)
 
-        print("YOLO ARRAY")
-        print(yolo_array)
 
         for y in yolo_array:
             yolo_total = yolo_total + y[0]
             yolo_image_array.append(y[1])
 
-        print(yolo_total)
-        closest = ''
+        # closest = ''
         total_array.append(int(retina_total))
         total_array.append(int(yolo_total))
-        val=closest_value(total_array,int(cowNumber))
-        if retina_total == yolo_total:
+        # val=closest_value(total_array,int(cowNumber))
+
+        if retina_mean == yolo_mean:
             closest = "BOTH"
         else:
-            if val == yolo_total:
+            if yolo_mean > retina_mean:
                 closest = "YOLO"
             else:
                 closest = "RETINANET"
 
         return render_template('resultmulti.html',retina_total = retina_total, yolo_total = yolo_total, retina_image_array = retina_image_array, yolo_image_array = yolo_image_array, closest = closest,
-                               yolo_number_array = yolo_number_array, retina_number_array = retina_number_array)
+                               yolo_number_array = yolo_number_array, retina_number_array = retina_number_array, percent_yolo_array = percent_yolo_array, percent_retina_array = percent_retina_array,
+                               yolo_mean = yolo_mean, retina_mean = retina_mean)
 
         
 

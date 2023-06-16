@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import shutil
 import uuid
 import requests
-def detectmult(img):
+def detectmult(img, num_anm):
     weights = RetinaNet_ResNet50_FPN_V2_Weights.DEFAULT
     model = retinanet_resnet50_fpn_v2(weights=weights, score_thresh=0.35)
     # Put the model in inference mode
@@ -47,10 +47,18 @@ def detectmult(img):
     # ax.imshow(im)
     # cv2.imwrite("static/r.jpg", numpydata)
 
+
     cv2.imwrite("static/" + str(guid) + ".jpg", numpydata)
     retina_num = 0
     for i in prediction["labels"]:
         if i == 21:
             retina_num = retina_num + 1
-    return retina_num, "static/" + str(guid) + ".jpg"
+    print("RETINA NUM: ", retina_num)
+    print("NUMERo ANIMAIS: ", num_anm)
+    if num_anm >= retina_num:
+        percent_retina = retina_num/num_anm
+    else:
+        percent_retina = num_anm/retina_num
+
+    return retina_num, "static/" + str(guid) + ".jpg", percent_retina
     # plt.show()

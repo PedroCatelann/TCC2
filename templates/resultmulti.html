@@ -47,9 +47,11 @@
           <div class="card-body">
             <h1 class="card-title">YOLO </h1>
             <hr>
-            <div class="d-flex align-items-start justify-content-between">
-              <div>
+            <div class="d-flex align-items-start justify-content-between" style="background-color: lightgray;">
+              <div style="background-color: lightgray;">
                 <h2 class="">Total de detecções: {{yolo_total}} </h2>
+                <h2 class="">Média Geral: {{'{0:.6f}%'.format(yolo_mean * 100)}}</h2>
+
 
               </div>
             </div>
@@ -58,12 +60,16 @@
           <hr>
             
           </div>
-          {% for i in yolo_image_array %}
-              <h3>Nº de detecções: {{yolo_number_array[loop.index0]}}</h3>
-              <img src="{{i}}" class="card-img-bottom mt-5">
-              <hr>
+          <div>
+            {% for i in yolo_image_array %}
+                <h3>Nº de detecções: {{yolo_number_array[loop.index0]}}</h3>
+                <h3>porcentagem: {{percent_yolo_array[loop.index0] * 100}}%</h3>
+                <img src="{{i}}" class="card-img-bottom mt-5">
+                <hr>
 
-          {% endfor %}
+            {% endfor %}
+          </div>
+          
 
 
 
@@ -79,9 +85,10 @@
           <div class="card-body">
             <h1 class="card-title">RetinaNet </h1>
             <hr>
-            <div class="d-flex align-items-start justify-content-between">
-              <div>
+            <div class="d-flex align-items-start justify-content-between" style="background-color: lightgray;">
+              <div style="background-color: lightgray;">
                 <h2 class="">Total de detecções: {{retina_total}} </h2>
+                <h2 class="">Média Geral: {{'{0:.6f}%'.format(retina_mean * 100)}}</h2>
 
               </div>
             </div>
@@ -90,11 +97,16 @@
           <hr>
 
           </div>
-          {% for i in retina_image_array %}
-              <h3>Nº de detecções: {{retina_number_array[loop.index0]}}</h3>
-              <img src="{{i}}" class="card-img-bottom mt-5">
-              <hr>
-          {% endfor %}
+          
+          <div>
+            {% for i in retina_image_array %}
+                <h3>Nº de detecções: {{retina_number_array[loop.index0]}}</h3>
+                <h3>porcentagem: {{percent_retina_array[loop.index0] * 100}}%</h3>
+                <img src="{{i}}" class="card-img-bottom mt-5">
+                <hr>
+            {% endfor %}
+          </div>
+          
 
 
 
