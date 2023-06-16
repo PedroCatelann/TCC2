@@ -45,20 +45,24 @@
       <div id="geral" class="card mb-6" enctype=multipart/form-data method="post">
         <div class="card p-5">
           <div class="card-body">
-            <h5 class="card-title">YOLO </h5>
+            <h1 class="card-title">YOLO </h1>
             <hr>
             <div class="d-flex align-items-start justify-content-between">
               <div>
-                <p class="">Total de detecções: {{yolo_total}} </p>
+                <h2 class="">Total de detecções: {{yolo_total}} </h2>
 
               </div>
             </div>
             
             
+          <hr>
             
           </div>
           {% for i in yolo_image_array %}
+              <h3>Nº de detecções: {{yolo_number_array[loop.index0]}}</h3>
               <img src="{{i}}" class="card-img-bottom mt-5">
+              <hr>
+
           {% endfor %}
 
 
@@ -73,20 +77,23 @@
       <div id="geral" class="card mb-6" enctype=multipart/form-data method="post">
         <div class="card p-5">
           <div class="card-body">
-            <h5 class="card-title">RetinaNet </h5>
+            <h1 class="card-title">RetinaNet </h1>
             <hr>
             <div class="d-flex align-items-start justify-content-between">
               <div>
-                <p class="">Total de detecções: {{retina_total}} </p>
+                <h2 class="">Total de detecções: {{retina_total}} </h2>
 
               </div>
             </div>
             
             
-            
+          <hr>
+
           </div>
           {% for i in retina_image_array %}
+              <h3>Nº de detecções: {{retina_number_array[loop.index0]}}</h3>
               <img src="{{i}}" class="card-img-bottom mt-5">
+              <hr>
           {% endfor %}
 
 

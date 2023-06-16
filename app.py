@@ -107,6 +107,9 @@ def predict():
 def processingmanyfiles():
     retina_array = []
     yolo_array = []
+    array_numbers = []
+    retina_number_array = []
+    yolo_number_array = []
     num_yolo = 0
     if request.method == 'POST':
         d = request.files
@@ -121,25 +124,25 @@ def processingmanyfiles():
                     num_yolo = 0
                     img = Image.open(b).convert('RGB')
                     retina = detectmult(img)
+                    print("RETINA ARRAY")
+                    retina_number_array.append(retina[0])
                     retina_array.append(retina)
-                    
 
                     numpydata = asarray(img)
                     
-                    cv2.imwrite("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + b.filename, numpydata)
+                    cv2.imwrite("./static/" + b.filename, numpydata)
 
-                    with open("C:/Users/pedro/OneDrive/Ambiente de Trabalho/" + b.filename, "rb") as image:
+                    with open("./static/" + b.filename, "rb") as image:
                         f = image.read()
                         results = get_prediction(f)  
                         print(results.pandas().xyxy[0]['class'])
                         for i in results.pandas().xyxy[0]['class']:
-                            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
-                            print(i)
                             if i == 19:
                                 num_yolo = num_yolo + 1              
                         guid = uuid.uuid4()
                         results.save(save_dir='static')
-                        os.rename('./static/image0.jpg','./static/' + str(guid) + ".jpg")                        
+                        os.rename('./static/image0.jpg','./static/' + str(guid) + ".jpg")     
+                        yolo_number_array.append(num_yolo)                   
                         yolo_array.append((num_yolo,'./static/' + str(guid) + ".jpg"))
                         
         retina_total = 0
@@ -172,7 +175,8 @@ def processingmanyfiles():
             else:
                 closest = "RETINANET"
 
-        return render_template('resultmulti.html',retina_total = retina_total, yolo_total = yolo_total, retina_image_array = retina_image_array, yolo_image_array = yolo_image_array, closest = closest)
+        return render_template('resultmulti.html',retina_total = retina_total, yolo_total = yolo_total, retina_image_array = retina_image_array, yolo_image_array = yolo_image_array, closest = closest,
+                               yolo_number_array = yolo_number_array, retina_number_array = retina_number_array)
 
         
 
